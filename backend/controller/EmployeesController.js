@@ -1,148 +1,283 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import Hearder from './Hearder';
 
-const departmentList = [
-  'Human_Resources',
-  'Software_Development',
-  'Quality_Assurance',
-  'Product_Management',
-  'Sales_and_Marketing',
-  'IT_Support',
-  'DevOps',
-  'Customer_Support',
-  'Business_Analysis',
-];
+import { User } from "../model/Employees.js";
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import { Department } from "../model/Department.js";
+dotenv.config();
 
-const CreateEmployee = () => {
-  const [name, setName] = useState('');
-  const [experience, setExperience] = useState('');
-  const [contact, setContact] = useState('');
-  const [salary, setSalary] = useState('');
-  const [dob, setDob] = useState('');
-  const [department, setDepartment] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [profilePhoto, setProfilePhoto] = useState(null);
 
-  const navigate = useNavigate();
+import  cloudinary  from '../utiles/cloudinary.js';
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+export const create = async (req, res) => {
+  const { name, experience, status,contact, salary, department, email, password, dob } = req.body;
+  const profilePhoto = req.file;
+  
 
-    if (!profilePhoto) {
-      toast.error("Profile photo is required!");
-      return;
+  if (!name || !email ||!status|| !password || !salary || !contact || !department || !experience || !profilePhoto || !dob ) {
+    return res.status(400).json({
+      message: "All fields are required",
+      success: false,
+    });
+  }
+
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({
+        message: "User already exists with this email",
+        success: false,
+      });
     }
 
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('experience', experience);
-    formData.append('contact', contact);
-    formData.append('salary', salary);
-    formData.append('dob', dob);
-    formData.append('status', 'active');
-    formData.append('department', department);
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('profilePhoto', profilePhoto);
+    const base64Image = `data:${profilePhoto.mimetype};base64,${profilePhoto.buffer.toString("base64")}`;
+   
+    const uploadResult = await cloudinary.uploader.upload(base64Image, {
+      folder: "Employees",
+    });
 
-    try {
-      const res = await axios.post(
-        'https://employees-frontend.onrender.com/api/v1/user/create',
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          withCredentials: true,
-        }
-      );
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-      toast.success(res.data.message);
-      navigate('/');
-    } catch (error) {
-      console.error('Error creating employee:', error);
-      toast.error(error.response?.data?.message || "Failed to create employee");
+    const newUser = await User.create({
+      name,
+      experience,
+      contact,
+      salary,
+      dob,
+      department,
+      email,
+      status,
+      password: hashedPassword,
+      
+      profilephoto: uploadResult.secure_url,
+    });
+    const dept =await Department.findOne({department_name:department});
+    if(dept){
+       dept.employees.push(newUser._id);
+        await dept.save();
     }
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Hearder />
-      <main className="flex-grow p-6">
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-4xl mx-auto p-8 bg-white rounded-3xl shadow-lg space-y-8"
-        >
-          <h2 className="text-3xl font-bold text-center text-blue-600">
-            Create New Employee
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input label="Full Name" value={name} onChange={setName} />
-            <Input label="Email" type="email" value={email} onChange={setEmail} />
-            <Input label="Password" type="password" value={password} onChange={setPassword} />
-            <Input label="Contact Number" type="text" value={contact} onChange={setContact} />
-            <Input label="Salary (₹)" type="text" value={salary} onChange={setSalary} />
-            <Input label="Experience (years)" type="text" value={experience} onChange={setExperience} />
-            <Input label="Date of Birth" type="date" value={dob} onChange={setDob} />
-
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-700 mb-1">Department</label>
-              <select
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                required
-              >
-                <option value="">Select Department</option>
-                {departmentList.map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept.replace(/_/g, ' ')}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-2">
-              Upload Profile Photo <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setProfilePhoto(e.target.files[0])}
-              className="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-3 text-lg bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition duration-200"
-          >
-            🚀 Create Employee
-          </button>
-        </form>
-      </main>
-    </div>
-  );
+    res.status(200).json({
+      message: "Employee created successfully",
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong",
+      success: false,
+      error: error.message,
+    });
+  }
 };
 
-const Input = ({ label, value, onChange, type = "text", readOnly = false }) => (
-  <div className="flex flex-col">
-    <label className="text-sm font-medium text-gray-700 mb-1">{label}</label>
-    <input
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      required
-      readOnly={readOnly}
-      className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
-  </div>
-);
 
-export default CreateEmployee;
+export const getAllUsers=async(req,res)=>{
+    try{
+       const usersData=await User.find().select("-password");
+       if(!usersData){
+        res.status(400).json({message:"Users is Empty" ,success:true})
+       }
+       res.status(200).json({message:"Users Data" ,success:false ,usersData})
+    }catch(error){
+      res.status(501).json({message:"server error" ,success:false})
+    }
+}
+
+export const getUserById=async(req,res)=>{
+  try{
+     const usersData=await User.findById(req.params.id).select("-password");
+     if(!usersData){
+      res.status(400).json({message:"Users is Empty" ,success:true})
+     }
+     res.status(200).json({message:"Users Data" ,success:false ,usersData})
+  }catch(error){
+    res.status(501).json({message:"server error" ,success:false})
+  }
+}
+
+export const changestatus=async(req,res)=>{
+  try{
+     const usersData=await User.findById(req.params.id).select("-password");
+     if(!usersData){
+      res.status(400).json({message:"Users is Empty" ,success:false})
+     }
+     if (usersData.status === "Leave") {
+      return res.status(200).json({ message: "User is already active", success: false });
+    }
+     usersData.status="Leave"
+     await usersData.save()
+     res.status(200).json({message:"User on leave !" ,success:true })
+  }catch(error){
+    res.status(501).json({message:"server error" ,success:false})
+  }
+}
+export const changestatus2 = async (req, res) => {
+  try {
+    const usersData = await User.findById(req.params.id).select("-password");
+
+    if (!usersData) {
+      return res.status(400).json({ message: "User not found", success: false });
+    }
+
+    if (usersData.status === "active") {
+      return res.status(200).json({ message: "User is already active", success: false });
+    }
+
+    usersData.status = "active";
+    await usersData.save();
+
+    res.status(200).json({ message: "User status changed to active", success: true });
+    
+  } catch (error) {
+    console.error("Error changing status:", error);
+    res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+
+export const deleteUsers = async (req, res) => {
+  try {
+    const usersData = await User.findById(req.params.id).select("-password");
+
+    if (!usersData) {
+      return res.status(400).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+
+    const dept = await Department.findOne({ department_name: usersData.department });
+
+    dept.employees.pull(usersData._id);
+    await dept.save();
+
+   
+    await User.findByIdAndDelete(req.params.id);
+
+    return res.status(200).json({
+      message: "User deleted successfully",
+      success: true,
+      usersData,
+    });
+  } catch (error) {
+    console.error("Delete User Error:", error);
+    return res.status(501).json({
+      message: "Server error",
+      success: false,
+    });
+  }
+};
+
+export const getUserByIdAndupdate = async (req, res) => {
+  try {
+    const usersData = await User.findById(req.params.id).select("-password");
+
+    if (!usersData) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false
+      });
+    }
+
+    const allowedFields = [
+      "name",
+      "experience",
+      "contact",
+      "salary",
+      "department",
+      "email",
+      "status"
+    ];
+
+    // Dynamically update only provided fields
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        usersData[field] = req.body[field];
+      }
+    });
+
+    // Handle image upload if profilePhoto is provided
+    if (req.file) {
+      const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+      const uploadResult = await cloudinary.uploader.upload(base64Image, {
+        folder: "Employees",
+      });
+      usersData.profilephoto = uploadResult.secure_url;
+    }
+
+    await usersData.save();
+
+    res.status(200).json({
+      message: "User updated successfully",
+      success: true,
+      usersData
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server error",
+      success: false,
+      error: error.message
+    });
+  }
+};
+
+
+
+export const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+ 
+    if (!username || !password) {
+      return res.status(400).json({ message: "Please fill all the fields" });
+    }
+
+
+    
+
+    if (username !== "harsh" || password !== "bro") {
+      return res.status(401).json({
+        message: "Incorrect email",
+        success: false,
+      });
+    }
+   const userId="121352121322"
+  
+    const token = jwt.sign({ userId: userId}, process.env.SECRET_KEY, {
+      expiresIn: "7d",
+    });
+
+
+   
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,        
+      sameSite: 'None',  
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    }).json({
+      message: 'Welcome back Admin',
+      success: true,
+      token
+    });
+    
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", success: false });
+  }
+};
+export const logoutUser = (req, res) => {
+  try{
+  res.cookie("token", " ", { maxAge: 0 });
+
+  res.json({
+    message: "Logged out successfully",
+  });
+
+}catch(error){
+  console.error('Error during registration:', error);
+  res.status(500).json({
+    message: error.message,
+  });
+}};
