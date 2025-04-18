@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,13 +10,8 @@ const Hearder = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const logout=async()=>{
         try{
-            const res=await axios.get("https://employees-frontend.onrender.com/api/v1/user/logout",{
-                withCredentials:true,
-            });
-            if(res.data.message){
-                toast.success(res.data.message);
-                navigate("/login")
-            }
+           Cookies.set("token","");
+           navigate('/login');
         }catch(error){
             toast.error("server error")
         }
