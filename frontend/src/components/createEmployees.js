@@ -4,6 +4,18 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Hearder from './Hearder';
 
+const departmentList = [
+  'Human_Resources',
+  'Software_Development',
+  'Quality_Assurance',
+  'Product_Management',
+  'Sales_and_Marketing',
+  'IT_Support',
+  'DevOps',
+  'Customer_Support',
+  'Business_Analysis',
+];
+
 const CreateEmployee = () => {
   const [name, setName] = useState('');
   const [experience, setExperience] = useState('');
@@ -16,19 +28,6 @@ const CreateEmployee = () => {
   const [profilePhoto, setProfilePhoto] = useState(null);
 
   const navigate = useNavigate();
-
-  // Department with corresponding salary ranges
-  const departmentSalary = {
-    Human_Resources,
-    Software_Development,
-    Quality_Assurance,
-    Product_Management,
-    Sales_and_Marketing,
-    IT_Support,
-    DevOps,
-    Customer_Support,
-    Business_Analysis,
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,12 +67,6 @@ const CreateEmployee = () => {
     }
   };
 
-  const handleDepartmentChange = (e) => {
-    const selectedDept = e.target.value;
-    setDepartment(selectedDept);
-    setSalary(departmentSalary[selectedDept] || '');
-  };
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Hearder />
@@ -90,22 +83,21 @@ const CreateEmployee = () => {
             <Input label="Full Name" value={name} onChange={setName} />
             <Input label="Email" type="email" value={email} onChange={setEmail} />
             <Input label="Password" type="password" value={password} onChange={setPassword} />
-            <Input label="Contact Number" type="number" value={contact} onChange={setContact} />
-            <Input label="Salary" type="number" value={salary} onChange={setSalary}  />
+            <Input label="Contact Number" type="text" value={contact} onChange={setContact} />
+            <Input label="Salary (₹)" type="text" value={salary} onChange={setSalary} />
             <Input label="Experience (years)" type="text" value={experience} onChange={setExperience} />
             <Input label="Date of Birth" type="date" value={dob} onChange={setDob} />
-            
-           
+
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-700 mb-1">Department</label>
               <select
                 value={department}
-                onChange={handleDepartmentChange}
+                onChange={(e) => setDepartment(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
               >
                 <option value="">Select Department</option>
-                {Object.keys(departmentSalary).map((dept) => (
+                {departmentList.map((dept) => (
                   <option key={dept} value={dept}>
                     {dept.replace(/_/g, ' ')}
                   </option>
