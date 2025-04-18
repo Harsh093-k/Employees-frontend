@@ -10,6 +10,11 @@ const Hearder = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const logout=async()=>{
         try{
+        
+            const logout=await axios.get('https://employees-frontend.onrender.com/api/v1/user/logout',{
+                      withCredentials:true,
+            })
+           toast.success(logout.data.message);
            Cookies.set("token","");
            navigate('/login');
         }catch(error){
