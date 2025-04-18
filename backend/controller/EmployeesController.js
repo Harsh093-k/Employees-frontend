@@ -245,14 +245,15 @@ export const login = async (req, res) => {
    const userId="121352121322"
   
     const token = jwt.sign({ userId: userId}, process.env.SECRET_KEY, {
-      expiresIn: "1d",
+      expiresIn: "7d",
     });
 
 
    
     return res.cookie('token', token, {
-      httpOnly: true, secure: true,
-      sameSite: 'none', maxAge: 1 * 24 * 60 * 60 * 1000
+      httpOnly: true, sameSite: 'none',secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000
+
   }).json({
       message: 'Welcome back Admin',
       success: true,
