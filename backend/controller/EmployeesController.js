@@ -250,15 +250,17 @@ export const login = async (req, res) => {
 
 
    
-    return res.cookie('token', token, {
-      httpOnly: true, sameSite: 'none',secure: true,
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,        
+      sameSite: 'None',  
       maxAge: 7 * 24 * 60 * 60 * 1000
-
-  }).json({
+    }).json({
       message: 'Welcome back Admin',
       success: true,
       token
     });
+    
     
   } catch (error) {
     console.error(error);
