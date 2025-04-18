@@ -179,14 +179,14 @@ const Employees = () => {
                     e.preventDefault();
                     try {
                       const res = await axios.put(
-                        `http://localhost:8080/api/v1/user/update/${selectedEmployee._id}`,
+                        `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
                         selectedEmployee,
                         { withCredentials: true }
                       );
                       if (res.data.message) {
                         toast.success(res.data.message);
                         setIsEditModalOpen(false);
-                        const refreshed = await axios.get('http://localhost:8080/api/v1/user/getUsers', {
+                        const refreshed = await axios.get('https://employees-frontend.onrender.com/api/v1/user/getUsers', {
                           withCredentials: true,
                         });
                         setEmployeesData(refreshed.data.usersData);
