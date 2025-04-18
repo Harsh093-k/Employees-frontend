@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TextInput from '../assests/TextInput';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaLock } from 'react-icons/fa';
 
@@ -25,7 +26,7 @@ function Login() {
         }
       );
       if (res.data.success) {
-        console.log("login data",res.data);
+        Cookies.set("token",res.data.token);
         toast.success(res.data.message);
         setUsername('');
         setPassword('');

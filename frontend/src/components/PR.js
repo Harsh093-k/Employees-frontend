@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children }) => {
   const token = Cookies.get('token'); 
  useEffect(()=>{
   
-console.log("document",document.cookie); 
+
   console.log('Token:', Cookies.get('token'));
  },[])
   if (!token) {
