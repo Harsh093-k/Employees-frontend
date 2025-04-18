@@ -19,7 +19,7 @@ const MainCard = () => {
           withCredentials: true,
         });
 
-        setTotalEmployees(res2.data.Employees);
+        setTotalEmployees(res2.data.usersData);
         setDepartment(res.data.Departments);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
