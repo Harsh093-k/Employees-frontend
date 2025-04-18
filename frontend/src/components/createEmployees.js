@@ -19,15 +19,15 @@ const CreateEmployee = () => {
 
   // Department with corresponding salary ranges
   const departmentSalary = {
-    Human_Resources: '₹25,000 - ₹35,000',
-    Software_Development: '₹50,000 - ₹70,000',
-    Quality_Assurance: '₹40,000 - ₹50,000',
-    Product_Management: '₹60,000 - ₹80,000',
-    Sales_and_Marketing: '₹35,000 - ₹45,000',
-    IT_Support: '₹25,000 - ₹40,000',
-    DevOps: '₹45,000 - ₹75,000',
-    Customer_Support: '₹20,000 - ₹30,000',
-    Business_Analysis: '₹45,000 - ₹60,000',
+    Human_Resources,
+    Software_Development,
+    Quality_Assurance,
+    Product_Management,
+    Sales_and_Marketing,
+    IT_Support,
+    DevOps,
+    Customer_Support,
+    Business_Analysis,
   };
 
   const handleSubmit = async (e) => {
@@ -90,8 +90,8 @@ const CreateEmployee = () => {
             <Input label="Full Name" value={name} onChange={setName} />
             <Input label="Email" type="email" value={email} onChange={setEmail} />
             <Input label="Password" type="password" value={password} onChange={setPassword} />
-            <Input label="Contact Number" type="text" value={contact} onChange={setContact} />
-            <Input label="Salary" type="text" value={salary} onChange={setSalary} readOnly />
+            <Input label="Contact Number" type="number" value={contact} onChange={setContact} />
+            <Input label="Salary" type="number" value={salary} onChange={setSalary}  />
             <Input label="Experience (years)" type="text" value={experience} onChange={setExperience} />
             <Input label="Date of Birth" type="date" value={dob} onChange={setDob} />
             
