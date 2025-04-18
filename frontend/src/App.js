@@ -18,8 +18,7 @@ const AppRoutes = () => {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<div>Signup Component</div>} /> {/* Replace with actual Signup component */}
-          <Route path="/forgot-password" element={<div>Forgot Password Component</div>} /> {/* Replace too */}
+         
 
           {/* Protected Routes */}
           <Route

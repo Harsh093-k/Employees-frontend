@@ -24,8 +24,7 @@ const EmployeeDetails = () => {
   return (
     <div className="h-screen flex flex-col">
       <Hearder />
-      <div className="flex flex-1 overflow-hidden">
-        <SideBar />
+     
         <div className="flex-1 p-8 overflow-auto">
           <div className="flex gap-8 p-6 border rounded-lg shadow-md items-center bg-white">
             <div>
@@ -53,7 +52,7 @@ const EmployeeDetails = () => {
           </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 

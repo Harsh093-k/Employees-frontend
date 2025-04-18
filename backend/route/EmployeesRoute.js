@@ -1,7 +1,7 @@
 
 
 import express from "express";
-import { getAllUsers, getUserById, getUserByIdAndupdate,login, logoutUser, create, deleteUsers, changestatus} from "../controller/EmployeesController.js";
+import { getAllUsers, getUserById, getUserByIdAndupdate,login, logoutUser, create, deleteUsers, changestatus, changestatus2} from "../controller/EmployeesController.js";
 import upload from "../utiles/multer.js";
 import isAuthenticated from "../utiles/isAuthenticated.js";
 
@@ -13,6 +13,7 @@ route.get("/logout",logoutUser)
 route.get("/getUsers",isAuthenticated,getAllUsers);
 route.get("/:id",isAuthenticated,getUserById);
 route.get("/status/:id",isAuthenticated,changestatus);
+route.get("/status/active/:id",isAuthenticated,changestatus2);
 route.put("/update/:id",isAuthenticated,getUserByIdAndupdate);
 route.delete("/delete/:id",isAuthenticated,deleteUsers);
 export default route;

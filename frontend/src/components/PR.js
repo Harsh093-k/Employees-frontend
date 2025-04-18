@@ -1,11 +1,15 @@
-// components/ProtectedRoute.js
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const ProtectedRoute = ({ children }) => {
-  const token = Cookies.get('token'); // assuming your auth token is stored as "token"
-
+  const token = Cookies.get("token"); 
+ useEffect(()=>{
+  
+console.log("document",document.cookie); 
+  console.log('Token:', Cookies.get('token'));
+ },[])
   if (!token) {
     return <Navigate to="/login" replace />;
   }

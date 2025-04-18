@@ -25,6 +25,7 @@ function Login() {
         }
       );
       if (res.data.success) {
+        console.log("login data",res.data);
         toast.success(res.data.message);
         setUsername('');
         setPassword('');

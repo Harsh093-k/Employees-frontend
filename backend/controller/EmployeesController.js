@@ -100,6 +100,9 @@ export const changestatus=async(req,res)=>{
      if(!usersData){
       res.status(400).json({message:"Users is Empty" ,success:false})
      }
+     if (usersData.status === "Leave") {
+      return res.status(200).json({ message: "User is already active", success: false });
+    }
      usersData.status="Leave"
      await usersData.save()
      res.status(200).json({message:"User on leave !" ,success:true })
@@ -107,6 +110,29 @@ export const changestatus=async(req,res)=>{
     res.status(501).json({message:"server error" ,success:false})
   }
 }
+export const changestatus2 = async (req, res) => {
+  try {
+    const usersData = await User.findById(req.params.id).select("-password");
+
+    if (!usersData) {
+      return res.status(400).json({ message: "User not found", success: false });
+    }
+
+    if (usersData.status === "active") {
+      return res.status(200).json({ message: "User is already active", success: false });
+    }
+
+    usersData.status = "active";
+    await usersData.save();
+
+    res.status(200).json({ message: "User status changed to active", success: true });
+    
+  } catch (error) {
+    console.error("Error changing status:", error);
+    res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
 
 export const deleteUsers = async (req, res) => {
   try {
@@ -224,12 +250,17 @@ export const login = async (req, res) => {
 
 
    
-
-    return res.cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 1 * 24 * 60 * 60 * 1000 }).json({
-      message: `Welcome back Admin`,
+    return res.cookie('token', token, {
+      httpOnly: false,
+      sameSite: 'none',
+      secure: true, 
+      maxAge: 1 * 24 * 60 * 60 * 1000
+    }).json({
+      message: 'Welcome back Admin',
       success: true,
+      token
+    });
     
-  });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error", success: false });
@@ -237,7 +268,7 @@ export const login = async (req, res) => {
 };
 export const logoutUser = (req, res) => {
   try{
-  res.cookie("token", "", { maxAge: 0 });
+  res.cookie("token", " ", { maxAge: 0 });
 
   res.json({
     message: "Logged out successfully",
