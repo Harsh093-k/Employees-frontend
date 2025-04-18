@@ -12,10 +12,10 @@ const MainCard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/v1/department/get", {
+        const res = await axios.get("https://employees-frontend.onrender.com/api/v1/department/get", {
           withCredentials: true,
         });
-        const res2 = await axios.get("http://localhost:8080/api/v1/user/getUsers", {
+        const res2 = await axios.get("https://employees-frontend.onrender.com/api/v1/user/getUsers", {
           withCredentials: true,
         });
 

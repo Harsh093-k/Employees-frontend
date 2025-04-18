@@ -24,7 +24,7 @@ const DepartmentList = () => {
 
   const fetchDepartments = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/v1/department/get', {
+      const response = await axios.get('https://employees-frontend.onrender.com/api/v1/department/get', {
         withCredentials: true,
       });
       setDepartments(response.data.Departments);
@@ -39,7 +39,7 @@ const DepartmentList = () => {
   const handleAddDepartment = async () => {
     try {
       const res = await axios.post(
-        'http://localhost:8080/api/v1/department/create',
+        'https://employees-frontend.onrender.com/api/v1/department/create',
         newDepartment,
         { withCredentials: true }
       );
@@ -69,7 +69,7 @@ const DepartmentList = () => {
   const handleSaveEdit = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:8080/api/v1/department/update/${editDepartment._id}`,
+        `https://employees-frontend.onrender.com/api/v1/department/update/${editDepartment._id}`,
         editDepartment,
         { withCredentials: true }
       );

@@ -11,7 +11,7 @@ const EmployeeDetails = () => {
  
   useEffect(()=>{
       const fetch=async()=>{
-         const EmployeeDetail=await axios.get(`http://localhost:8080/api/v1/user/${id}`,{
+         const EmployeeDetail=await axios.get(`https://employees-frontend.onrender.com/api/v1/user/${id}`,{
           withCredentials:true,
          })
          console.log(EmployeeDetail.data.usersData);

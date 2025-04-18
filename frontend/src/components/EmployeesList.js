@@ -14,7 +14,7 @@ const Employees = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const data = await axios.get('http://localhost:8080/api/v1/user/getUsers', {
+      const data = await axios.get('https://employees-frontend.onrender.com/api/v1/user/getUsers', {
         withCredentials: true,
       });
       setEmployeesData(data.data.usersData);
@@ -24,12 +24,12 @@ const Employees = () => {
 
   const handleDelete = async (employeeId) => {
     try {
-      const res = await axios.delete(`http://localhost:8080/api/v1/user/delete/${employeeId}`, {
+      const res = await axios.delete(`https://employees-frontend.onrender.com/api/v1/user/delete/${employeeId}`, {
         withCredentials: true,
       });
       if (res.data.message) {
         toast.success(res.data.message);
-        const refreshed = await axios.get('http://localhost:8080/api/v1/user/getUsers', {
+        const refreshed = await axios.get('https://employees-frontend.onrender.com/api/v1/user/getUsers', {
           withCredentials: true,
         });
         setEmployeesData(refreshed.data.usersData);
@@ -41,13 +41,13 @@ const Employees = () => {
 
   const handleLeave = async (employeeId) => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/v1/user/status/${employeeId}`, {
+      const res = await axios.get(`https://employees-frontend.onrender.com/api/v1/user/status/${employeeId}`, {
         withCredentials: true,
       });
       if (res.data.message) {
         navigate('/Employees');
         toast.success(res.data.message);
-        const refreshed = await axios.get('http://localhost:8080/api/v1/user/getUsers', {
+        const refreshed = await axios.get('https://employees-frontend.onrender.com/api/v1/user/getUsers', {
           withCredentials: true,
         });
         setEmployeesData(refreshed.data.usersData);
@@ -59,13 +59,13 @@ const Employees = () => {
  
   const handleActuve= async (employeeId) => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/v1/user/status/active/${employeeId}`, {
+      const res = await axios.get(`https://employees-frontend.onrender.com/api/v1/user/status/active/${employeeId}`, {
         withCredentials: true,
       });
       if (res.data.message) {
         navigate('/Employees');
         toast.success(res.data.message);
-        const refreshed = await axios.get('http://localhost:8080/api/v1/user/getUsers', {
+        const refreshed = await axios.get('https://employees-frontend.onrender.com/api/v1/user/getUsers', {
           withCredentials: true,
         });
         setEmployeesData(refreshed.data.usersData);

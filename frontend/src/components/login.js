@@ -15,7 +15,7 @@ function Login() {
     try {
       setLoading(true);
       const res = await axios.post(
-        'http://localhost:8080/api/v1/user/login',
+        'https://employees-frontend.onrender.com/api/v1/user/login',
         { username, password },
         {
           headers: {

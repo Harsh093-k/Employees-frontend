@@ -52,7 +52,7 @@ const CreateEmployee = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:8080/api/v1/user/create',
+        'https://employees-frontend.onrender.com/api/v1/user/create',
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -95,7 +95,7 @@ const CreateEmployee = () => {
             <Input label="Experience (years)" type="text" value={experience} onChange={setExperience} />
             <Input label="Date of Birth" type="date" value={dob} onChange={setDob} />
             
-            {/* Department Dropdown */}
+           
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-700 mb-1">Department</label>
               <select
