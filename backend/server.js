@@ -14,8 +14,7 @@ const port = 8080;
 app.use(express.json())
 app.use(cookieParser());
 const corsOptions = {
-    // origin: 'https://employees-frontend-delta.vercel.app',
-    origin:'http://localhost:3000',
+    origin: 'https://employees-frontend-delta.vercel.app',
     credentials: true
 }
 app.use(cors(corsOptions));
