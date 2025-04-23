@@ -40,7 +40,7 @@ const Hearder = () => {
                       <div className="hidden md:flex space-x-6">
                           <a href="/" className="hover:text-gray-200">Dashboard</a>
                           <a href="/Employees" className="hover:text-gray-200">Employees</a>
-                          <a href="/DepartmentList" className="hover:text-gray-200">Departments</a>
+                          <a href="/DepartmentLists" className="hover:text-gray-200">Departments</a>
                           <a className="hover:text-gray-200 cursor-pointer" onClick={logout}>Logout</a>
                           <a href="/settings" className="hover:text-gray-200">Settings</a>
                       </div>
