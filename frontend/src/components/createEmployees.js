@@ -24,7 +24,7 @@ const CreateEmployee = () => {
   const [dob, setDob] = useState('');
   const [department, setDepartment] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [qualification, setQualification] = useState('');
   const [profilePhoto, setProfilePhoto] = useState(null);
 
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const CreateEmployee = () => {
     formData.append('status', 'active');
     formData.append('department', department);
     formData.append('email', email);
-    formData.append('password', password);
+    formData.append('qualification', qualification);
     formData.append('profilePhoto', profilePhoto);
 
     try {
@@ -82,7 +82,7 @@ const CreateEmployee = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input label="Full Name" value={name} onChange={setName} />
             <Input label="Email" type="email" value={email} onChange={setEmail} />
-            <Input label="Password" type="password" value={password} onChange={setPassword} />
+            <Input label="Qualification" type="text" value={qualification} onChange={setQualification} />
             <Input label="Contact Number" type="text" value={contact} onChange={setContact} />
             <Input label="Salary (₹)" type="text" value={salary} onChange={setSalary} />
             <Input label="Experience (years)" type="text" value={experience} onChange={setExperience} />

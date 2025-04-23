@@ -10,11 +10,11 @@ dotenv.config();
 import  cloudinary  from '../utiles/cloudinary.js';
 
 export const create = async (req, res) => {
-  const { name, experience, status,contact, salary, department, email, password, dob } = req.body;
+  const { name, experience, status,contact, salary, department, email,qualification, dob } = req.body;
   const profilePhoto = req.file;
   
 
-  if (!name || !email ||!status|| !password || !salary || !contact || !department || !experience || !profilePhoto || !dob ) {
+  if (!name || !email ||!status|| !qualification || !salary || !contact || !department || !experience || !profilePhoto || !dob ) {
     return res.status(400).json({
       message: "All fields are required",
       success: false,
@@ -47,8 +47,7 @@ export const create = async (req, res) => {
       department,
       email,
       status,
-      password: hashedPassword,
-      
+      qualification,
       profilephoto: uploadResult.secure_url,
     });
     const dept =await Department.findOne({department_name:department});
@@ -183,6 +182,7 @@ export const getUserByIdAndupdate = async (req, res) => {
       "name",
       "experience",
       "contact",
+      "profilephoto",
       "salary",
       "department",
       "email",
@@ -202,7 +202,11 @@ export const getUserByIdAndupdate = async (req, res) => {
       const uploadResult = await cloudinary.uploader.upload(base64Image, {
         folder: "Employees",
       });
-      usersData.profilephoto = uploadResult.secure_url;
+      console.log("Profile photo before:", usersData.profilephoto);
+usersData.profilephoto = uploadResult.secure_url;
+console.log("Profile photo after:", usersData.profilephoto);
+
+      
     }
 
     await usersData.save();

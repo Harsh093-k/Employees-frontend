@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: new Date()
     },
-    password: {
+    qualification: {
         type: String,
         required: true,
     }
