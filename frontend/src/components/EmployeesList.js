@@ -206,6 +206,7 @@ const Employees = () => {
                       );
 
                       if (res.data.message) {
+                        console.log("edit btn",res.data);
                         toast.success(res.data.message);
                         setIsEditModalOpen(false);
 
