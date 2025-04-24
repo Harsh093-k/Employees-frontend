@@ -4,15 +4,15 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import Hearder from "./Hearder";
 const departmentList = [
-  'Human_Resources',
-  'Software_Development',
-  'Quality_Assurance',
-  'Product_Management',
-  'Sales_and_Marketing',
-  'IT_Support',
+  'Human Resources',
+  'Software Development',
+  'Quality Assurance',
+  'Product Management',
+  'Sales and Marketing',
+  'IT Support',
   'DevOps',
-  'Customer_Support',
-  'Business_Analysis',
+  'Customer Support',
+  'Business Analysis',
 ];
 
 export default function CreateEmployeeForm() {
