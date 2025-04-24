@@ -56,8 +56,8 @@ const Employees = () => {
       toast.error('Server Error');
     }
   };
- 
-  const handleActuve= async (employeeId) => {
+
+  const handleActuve = async (employeeId) => {
     try {
       const res = await axios.get(`https://employees-frontend.onrender.com/api/v1/user/status/active/${employeeId}`, {
         withCredentials: true,
@@ -177,22 +177,47 @@ const Employees = () => {
                 <form
                   onSubmit={async (e) => {
                     e.preventDefault();
+
+                    const formData = new FormData();
+
+                    
+                    formData.append("name", selectedEmployee.name || "");
+                    formData.append("experience", selectedEmployee.experience || "");
+                    formData.append("email", selectedEmployee.email || "");
+                    formData.append("contact", selectedEmployee.contact || "");
+                    formData.append("salary", selectedEmployee.salary || "");
+                    formData.append("department", selectedEmployee.department || "");
+                    formData.append("status", selectedEmployee.status || "");
+
+                    if (selectedEmployee.profilephoto instanceof File) {
+                      formData.append("profilephoto", selectedEmployee.profilephoto); 
+                    }
+
                     try {
                       const res = await axios.put(
                         `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
-                        selectedEmployee,
-                        { withCredentials: true }
+                        formData,
+                        {
+                          withCredentials: true,
+                          headers: {
+                            "Content-Type": "multipart/form-data",
+                          },
+                        }
                       );
+
                       if (res.data.message) {
                         toast.success(res.data.message);
                         setIsEditModalOpen(false);
-                        const refreshed = await axios.get('https://employees-frontend.onrender.com/api/v1/user/getUsers', {
+
+                        const refreshed = await axios.get("https://employees-frontend.onrender.com/api/v1/user/getUsers", {
                           withCredentials: true,
                         });
+
                         setEmployeesData(refreshed.data.usersData);
                       }
                     } catch (err) {
-                      toast.error('Update failed');
+                      console.error(err);
+                      toast.error("Update failed");
                     }
                   }}
                   className="space-y-4"
@@ -213,9 +238,9 @@ const Employees = () => {
                     placeholder="Experience"
                   />
 
-                  {selectedEmployee.profilePhoto && typeof selectedEmployee.profilePhoto === 'string' && (
+                  {selectedEmployee.profilephoto && typeof selectedEmployee.profilephoto === 'string' && (
                     <img
-                      src={selectedEmployee.profilePhoto}
+                      src={selectedEmployee.profilephoto}
                       alt="Current Profile"
                       className="h-20 w-20 rounded-full object-cover"
                     />
@@ -227,7 +252,7 @@ const Employees = () => {
                     onChange={(e) =>
                       setSelectedEmployee({
                         ...selectedEmployee,
-                        profilePhoto: e.target.files[0],
+                        profilephoto: e.target.files[0],
                       })
                     }
                     className="block w-full border rounded px-3 py-2"
