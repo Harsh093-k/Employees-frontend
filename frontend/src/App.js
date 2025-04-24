@@ -38,7 +38,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="/DepartmentLists"
+            path="/Departments"
             element={
               <ProtectedRoute>
                 <DepartmentList />
