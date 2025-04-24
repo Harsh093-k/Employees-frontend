@@ -181,7 +181,7 @@ const Employees = () => {
                     const formData = new FormData();
 
                     
-                    formData.append("name", selectedEmployee.name || "");
+                    formData.append("name", selectedEmployee.name);
                     formData.append("experience", selectedEmployee.experience || "");
                     formData.append("email", selectedEmployee.email || "");
                     formData.append("contact", selectedEmployee.contact || "");
@@ -194,7 +194,8 @@ const Employees = () => {
                     }
 
                     try {
-                      const res = await axios.PUT(
+                      console.log(formData);
+                      const res = await axios.put(
                         `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
                         formData,
                         {
@@ -204,7 +205,7 @@ const Employees = () => {
                           },
                         }
                       );
-
+                           console.log("edit btn",res.data);
                       if (res.data.message) {
                         console.log("edit btn",res.data);
                         toast.success(res.data.message);
