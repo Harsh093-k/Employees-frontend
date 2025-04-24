@@ -218,6 +218,7 @@ const Employees = () => {
                       }
                     } catch (err) {
                       console.error(err);
+                      console.log("edit",err);
                       toast.error("Update failed");
                     }
                   }}
