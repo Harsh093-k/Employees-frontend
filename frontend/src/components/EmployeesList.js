@@ -175,56 +175,70 @@ const Employees = () => {
                 <h3 className="text-xl font-bold text-gray-700">✏️ Edit Employee</h3>
 
                 <form
-                  onSubmit={async (e) => {
-                    e.preventDefault();
+  onSubmit={async (e) => {
+    e.preventDefault();
+    
+    try {
+      const formData = new FormData();
 
-                    const formData = new FormData();
+      // Append all fields with null checks
+      const fields = [
+        'name', 'experience', 'email', 'contact', 
+        'salary', 'department', 'status', 'qualification', 'dob'
+      ];
 
-                    
-                    formData.append("name", selectedEmployee.name);
-                    formData.append("experience", selectedEmployee.experience || "");
-                    formData.append("email", selectedEmployee.email || "");
-                    formData.append("contact", selectedEmployee.contact || "");
-                    formData.append("salary", selectedEmployee.salary || "");
-                    formData.append("department", selectedEmployee.department || "");
-                    formData.append("status", selectedEmployee.status || "");
+      fields.forEach(field => {
+        if (selectedEmployee[field] !== undefined) {
+          formData.append(field, selectedEmployee[field] || '');
+        }
+      });
 
-                    if (selectedEmployee.profilephoto instanceof File) {
-                      formData.append("profilephoto", selectedEmployee.profilephoto); 
-                    }
+      // Handle profile photo if it exists
+      if (selectedEmployee.profilephoto instanceof File) {
+        formData.append('profilephoto', selectedEmployee.profilephoto);
+      }
 
-                    try {
-                      console.log(formData);
-                      const res = await axios.put(
-                        `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
-                        formData,
-                        {
-                          withCredentials: true,
-                          headers: {
-                            "Content-Type": "multipart/form-data",
-                          },
-                        }
-                      );
-                           console.log("edit btn",res.data);
-                      if (res.data.message) {
-                        console.log("edit btn",res.data);
-                        toast.success(res.data.message);
-                        setIsEditModalOpen(false);
+      // Debug: Log FormData contents
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
 
-                        const refreshed = await axios.get("https://employees-frontend.onrender.com/api/v1/user/getUsers", {
-                          withCredentials: true,
-                        });
+      const res = await axios.put(
+        `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
-                        setEmployeesData(refreshed.data.usersData);
-                      }
-                    } catch (err) {
-                      console.error(err);
-                      console.log("edit",err);
-                      toast.error("Update failed");
-                    }
-                  }}
-                  className="space-y-4"
-                >
+      if (res.data.message) {
+        toast.success(res.data.message);
+        setIsEditModalOpen(false);
+        
+        // Refresh employee data
+        const refreshed = await axios.get(
+          'https://employees-frontend.onrender.com/api/v1/user/getUsers', 
+          { withCredentials: true }
+        );
+        
+        setEmployeesData(refreshed.data.usersData);
+      }
+    } catch (err) {
+      console.error('Update error:', err);
+      
+      // More specific error message
+      const errorMessage = err.response?.data?.message || 
+                          err.message || 
+                          'Update failed';
+      toast.error(errorMessage);
+    }
+  }}
+  className="space-y-4"
+>
+  
                   <input
                     type="text"
                     value={selectedEmployee.name || ''}
