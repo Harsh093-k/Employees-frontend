@@ -36,7 +36,7 @@ export const create = async (req, res) => {
       folder: "Employees",
     });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  
 
     const newUser = await User.create({
       name,
