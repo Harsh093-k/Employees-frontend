@@ -169,7 +169,7 @@ export const deleteUsers = async (req, res) => {
 
 export const getUserByIdAndupdate = async (req, res) => {
   try {
-    const usersData = await User.findById(req.params.id).select("-password");
+    const usersData = await User.findById(req.params.id);
 
     if (!usersData) {
       return res.status(404).json({
@@ -189,25 +189,26 @@ export const getUserByIdAndupdate = async (req, res) => {
       "status"
     ];
 
-    // Dynamically update only provided fields
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
         usersData[field] = req.body[field];
       }
     });
 
-    // Handle image upload if profilePhoto is provided
+   
     if (req.file) {
+      console.log("File received:", req.file.originalname);
       const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
+      
       const uploadResult = await cloudinary.uploader.upload(base64Image, {
         folder: "Employees",
       });
-      console.log("Profile photo before:", usersData.profilephoto);
-usersData.profilephoto = uploadResult.secure_url;
-console.log("Profile photo after:", usersData.profilephoto);
-
       
+      console.log("Cloudinary Upload Result:", uploadResult);
+    
+      usersData.profilephoto = uploadResult.secure_url;
     }
+    
 
     await usersData.save();
 
