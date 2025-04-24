@@ -194,7 +194,7 @@ const Employees = () => {
                     }
 
                     try {
-                      const res = await axios.put(
+                      const res = await axios.PUT(
                         `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
                         formData,
                         {
