@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 import Hearder from "./Hearder";
 const departmentList = [
   'Human_Resources',
@@ -29,6 +31,7 @@ export default function CreateEmployeeForm() {
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -54,7 +57,8 @@ export default function CreateEmployeeForm() {
           withCredentials: true,
         }
       );
-      console.log(res.data.message);
+      toast.success(res.data.message);
+      navigate("/Employees");
       setMessage(res.data.message);
     } catch (err) {
       console.log(err);
