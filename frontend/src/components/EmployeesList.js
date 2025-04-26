@@ -174,13 +174,17 @@ const Employees = () => {
               <div className="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl space-y-4">
                 <h3 className="text-xl font-bold text-gray-700">✏️ Edit Employee</h3>
 
-<form
+  <form
                   onSubmit={async (e) => {
                     e.preventDefault();
-
+                  
+                    if (!selectedEmployee) {
+                      toast.error("No employee selected for update.");
+                      return;
+                    }
+                  
                     const formData = new FormData();
-
-                    
+                  
                     formData.append("name", selectedEmployee.name || "");
                     formData.append("experience", selectedEmployee.experience || "");
                     formData.append("email", selectedEmployee.email || "");
@@ -188,20 +192,22 @@ const Employees = () => {
                     formData.append("salary", selectedEmployee.salary || "");
                     formData.append("department", selectedEmployee.department || "");
                     formData.append("status", selectedEmployee.status || "");
-
+                  
                     if (selectedEmployee.profilephoto instanceof File) {
-                      formData.append("profilephoto", selectedEmployee.profilephoto); 
+                      formData.append("profilephoto", selectedEmployee.profilephoto);
                     }
 
                     try {
-                      console.log("Update data",formData.name);
-                       console.log("Update data",formData.experience);
-                        console.log("Update data",formData.contact);
-                       console.log("Update data",formData.status);
-                         console.log("Update data",formData.department);
-                       console.log("Update data",formData.salary);
-                        console.log("Update data",formData.email);
-                       console.log("Update data",formData.profilephoto);
+
+                      console.log("Update data", formData.get("name"));
+                      console.log("Update data", formData.get("experience"));
+                      console.log("Update data", formData.get("contact"));
+                      console.log("Update data", formData.get("status"));
+                      console.log("Update data", formData.get("department"));
+                      console.log("Update data", formData.get("salary"));
+                      console.log("Update data", formData.get("email"));
+                      console.log("Update data", formData.get("profilephoto"));
+
                       const res = await axios.put(
                         `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
                         formData,
@@ -212,9 +218,10 @@ const Employees = () => {
                           },
                         }
                       );
+                      
 
                       if (res.data.message) {
-                        console.log("referec",res.data)
+                        console.log(res.data)
                         toast.success(res.data.message);
                         setIsEditModalOpen(false);
 
