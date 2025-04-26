@@ -1,4 +1,4 @@
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 import { User } from "../model/Employees.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
@@ -189,11 +189,7 @@ export const getUserByIdAndupdate = async (req, res) => {
       "status"
     ];
 
-    allowedFields.forEach((field) => {
-      if (req.body[field] !== undefined) {
-        usersData[field] = req.body[field];
-      }
-    });
+   
 
    
     if (req.file) {
