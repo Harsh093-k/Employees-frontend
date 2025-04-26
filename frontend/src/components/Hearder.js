@@ -60,7 +60,7 @@ const Hearder = () => {
                       <a href="/" className="block px-4 py-2 hover:bg-blue-800">Dashboard</a>
                       <a href="/employees" className="block px-4 py-2 hover:bg-blue-800">Employees</a>
                       <a href="/departments" className="block px-4 py-2 hover:bg-blue-800">Departments</a>
-                   <a  className="block px-4 py-2 hover:bg-blue-800"  onClick={logout}>Logout</a>
+                    <a className="hover:text-gray-200 cursor-pointer" onClick={logout}>Logout</a>
                       <a href="/settings" className="block px-4 py-2 hover:bg-blue-800">Settings</a>
                   </div>
               )}
