@@ -194,6 +194,7 @@ const Employees = () => {
                     }
 
                     try {
+                      console.log("Update data",formData);
                       const res = await axios.put(
                         `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
                         formData,
@@ -206,7 +207,7 @@ const Employees = () => {
                       );
 
                       if (res.data.message) {
-                        console.log(res.data)
+                        console.log("referec",res.data)
                         toast.success(res.data.message);
                         setIsEditModalOpen(false);
 
