@@ -174,45 +174,56 @@ export const getUserByIdAndupdate = async (req, res) => {
     if (!usersData) {
       return res.status(404).json({
         message: "User not found",
-        success: false
+        success: false,
       });
     }
 
-   
+    // Fields you want to allow updating
+    const allowedFields = [
+      "name",
+      "experience",
+      "status",
+      "contact",
+      "department",
+      "email"
+    ];
 
-   
+    // Update only the allowed fields if they are provided in req.body
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        usersData[field] = req.body[field];
+      }
+    });
 
-   
+    // Handle file upload to Cloudinary (profilephoto)
     if (req.file) {
       console.log("File received:", req.file.originalname);
       const base64Image = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`;
-      
+
       const uploadResult = await cloudinary.uploader.upload(base64Image, {
         folder: "Employees",
       });
-      
+
       console.log("Cloudinary Upload Result:", uploadResult);
-    
       usersData.profilephoto = uploadResult.secure_url;
     }
-    
 
     await usersData.save();
 
     res.status(200).json({
       message: "User updated successfully",
       success: true,
-      usersData
+      usersData,
     });
-
   } catch (error) {
     res.status(500).json({
       message: "Server error",
       success: false,
-      error: error.message
+      error: error.message,
     });
   }
 };
+
 
 
 
