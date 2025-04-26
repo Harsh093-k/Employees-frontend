@@ -178,16 +178,7 @@ export const getUserByIdAndupdate = async (req, res) => {
       });
     }
 
-    const allowedFields = [
-      "name",
-      "experience",
-      "contact",
-      "profilephoto",
-      "salary",
-      "department",
-      "email",
-      "status"
-    ];
+   
 
    
 
