@@ -194,7 +194,14 @@ const Employees = () => {
                     }
 
                     try {
-                      console.log("Update data",formData);
+                      console.log("Update data",formData.name);
+                       console.log("Update data",formData.experience);
+                        console.log("Update data",formData.contact);
+                       console.log("Update data",formData.status);
+                         console.log("Update data",formData.department);
+                       console.log("Update data",formData.salary);
+                        console.log("Update data",formData.email);
+                       console.log("Update data",formData.profilephoto);
                       const res = await axios.put(
                         `https://employees-frontend.onrender.com/api/v1/user/update/${selectedEmployee._id}`,
                         formData,
