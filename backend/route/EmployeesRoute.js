@@ -14,6 +14,6 @@ route.get("/getUsers",isAuthenticated,getAllUsers);
 route.get("/:id",isAuthenticated,getUserById);
 route.get("/status/:id",isAuthenticated,changestatus);
 route.get("/status/active/:id",isAuthenticated,changestatus2);
-router.put("/update/:id", upload.single("profilephoto"), getUserByIdAndupdate);
+route.put("/update/:id", upload.single("profilephoto"), getUserByIdAndupdate);
 route.delete("/delete/:id",isAuthenticated,deleteUsers);
 export default route;
